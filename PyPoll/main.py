@@ -1,15 +1,15 @@
+#import data
 import os
 import csv
 
-
+#set up path
 pypollcsv = os.path.join("Resources", 'election_data.csv')
 pypolltxt = os.path.join("Analysis", 'election_analysis.txt')
 
-total_votes =[]
+#variables
+votes =[]
 canidates = []
-stockham = []
-degette = []
-doane = []
+canidate_votes = {}
 
 
 with open(pypollcsv) as csvfile:
@@ -17,20 +17,69 @@ with open(pypollcsv) as csvfile:
     csvheader = next(csvreader)
 
     for row in csvreader:
-        total_votes.append(row[2])
-        canidates.append(row[2])
+        votes.append(int(row[0]))
+
+        # canidate names 
+        canidate_name = (row[2])
+
+        # check canidate name in list 
+        if canidate_name not in canidates:
+            canidates.append(row[2])    
+            canidate_votes[canidate_name] = 0
+       
+       
+        # votes per canidate
+        canidate_votes[canidate_name] = canidate_votes[canidate_name] + 1
 
 
-total_votes = len(canidates)
-canidate_name = list(canidates)
+        
 
-for canidate in canidates:
-    if canidate == "stockham":
-        stockham.append(canidates)
-        stockhamvotes = len(stockham)
-    elif canidate == "degette":
-        degette.append(canidates)
-        degettevotes = len(degette)
-    elif canidate == "doane":
-        doane.append(canidates)
-        doanevotes = len(doane) 
+
+      
+#total number of votes
+total_votes = len(votes)
+
+ 
+
+
+election_output = (f'\n\nElection Results\n'
+f'----------------------------\n'
+f'Total Votes: {total_votes}\n'
+f'----------------------------\n')
+
+
+
+
+
+# print results 
+
+with open(pypolltxt, 'w') as f:
+    f.write(election_output)
+
+    
+    
+
+    # winner over canidate results 
+    for canidate in canidate_votes:
+
+        # get canidate votes 
+        votes = canidate_votes.get(canidate)
+
+        # percentage of votes 
+        percent_votes = votes/total_votes * 100
+
+
+
+        # print canidate votes 
+        canidate_results = (f'{canidate}: {percent_votes:.3f}% ({votes}) \n')
+
+        # winner 
+        
+
+
+
+        # save canidate name in text file 
+    
+        f.write(canidate_results)
+
+
